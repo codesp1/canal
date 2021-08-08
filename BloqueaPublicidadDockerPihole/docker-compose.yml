@@ -1,0 +1,19 @@
+version: "3"
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:v5.8.1-buster
+    ports:
+      - "10.0.2.15:53:53/tcp" # Puerto para el Dns tcp/udp
+      - "10.0.2.15:53:53/udp" 
+      - "2021:80/tcp" # Panel de control
+    environment:
+      TZ: 'America/Bogota'
+      WEBPASSWORD: 'codesp'
+    # Volumen donde se guarda la información
+    volumes:
+      - './datos/:/etc/pihole/'
+      - './datos/cachedns/:/etc/dnsmasq.d/'
+    cap_add:
+      - NET_ADMIN      
+    restart: unless-stopped
