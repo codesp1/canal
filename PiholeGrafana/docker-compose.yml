@@ -1,0 +1,34 @@
+version: "3"
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:v5.8.1-buster
+    ports:
+      - "10.0.2.15:53:53/tcp" # Puerto para el Dns tcp/udp
+      - "10.0.2.15:53:53/udp" 
+      - "2021:80/tcp" # Panel de control
+    user: 'root'
+    environment:
+      TZ: 'America/Bogota'
+      WEBPASSWORD: 'codesp'
+    # Volumen donde se guarda la información
+    volumes:
+      - './datospihole/:/etc/pihole/'
+      - './datospihole/cachedns/:/etc/dnsmasq.d/'
+
+    cap_add:
+      - NET_ADMIN      
+    restart: unless-stopped
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:8.1.0-ubuntu
+    ports:
+      - "3000:3000"
+    user: 'root'
+    # Volumen donde se guarda la información
+    volumes:
+      - './datosgrafana:/var/lib/grafana'
+      - './datospihole/:/db'   
+    depends_on:
+      - pihole 
+    restart: unless-stopped

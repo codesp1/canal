@@ -1,0 +1,13 @@
+************** Instalacion SQlite ***************
+docker-compose exec grafana grafana-cli plugins install frser-sqlite-datasource
+
+
+****************** Ruta db **********
+/db/pihole-FTL.db
+
+************* Query top sitios *******
+
+SELECT domain,count(domain) 
+FROM queries 
+WHERE (timestamp BETWEEN strftime('%s', 'now','-1 days') AND strftime('%s', 'now')) AND (STATUS == 2 OR STATUS == 3) 
+GROUP BY domain ORDER BY count(domain) DESC LIMIT 5
